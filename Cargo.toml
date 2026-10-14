@@ -1,0 +1,58 @@
+# A crate of its own: nothing here depends on Rusty Bucket. It has no `[workspace]` table, so inside
+# Rusty Bucket it is a member of the `tls/` workspace, and anywhere else it is a workspace by itself.
+
+[package]
+name = "utp-tls-provider"
+description = "A small, unaudited, verify-only crypto provider for rustls 0.23, built straight on the RustCrypto crates: TLS 1.3 client suites (AES-GCM, ChaCha20-Poly1305), X25519, and signature verification (ECDSA P-256/P-384, Ed25519, RSA-PSS, RSA PKCS#1 v1.5). It cannot sign. no_std plus alloc."
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/unicorntearsproject/utp-tls-provider"
+readme = "README.md"
+keywords = ["rustls", "tls", "no-std", "crypto"]
+categories = ["cryptography", "no-std"]
+publish = false
+
+[lib]
+name = "utp_tls_provider"
+
+[features]
+default = []
+# For targets `getrandom` does not know (bare metal): lets the program register its own source with
+# `getrandom::register_custom_getrandom!`.
+getrandom-custom = ["getrandom/custom"]
+
+[dependencies]
+# The library this provides for. No `std`, TLS 1.3 only: no `tls12`. MIT OR Apache-2.0 / ISC.
+rustls = { version = "=0.23.45", default-features = false }
+# MIT OR Apache-2.0.
+sha2 = { version = "0.10", default-features = false }
+hmac = { version = "0.12", default-features = false }
+digest = { version = "0.10", default-features = false }
+aead = { version = "0.5", default-features = false }
+aes-gcm = { version = "0.10", default-features = false, features = ["aes", "alloc"] }
+chacha20poly1305 = { version = "0.10", default-features = false }
+p256 = { version = "0.13", default-features = false, features = ["ecdsa"] }
+p384 = { version = "0.13", default-features = false, features = ["ecdsa"] }
+signature = { version = "2", default-features = false }
+ed25519-dalek = { version = "2", default-features = false }
+# BSD-3-Clause.
+x25519-dalek = { version = "2", default-features = false }
+zeroize = { version = "1", default-features = false }
+# MIT OR Apache-2.0. Randomness for the key exchange and the hello messages; on a target it does
+# not know, enable its `custom` feature and register a source.
+getrandom = { version = "0.2", default-features = false }
+# MIT OR Apache-2.0. The one big-number operation an RSA signature check needs (a public power),
+# so no RSA crate, and no private-key code, is built.
+num-bigint = { version = "0.4", default-features = false }
+
+[dev-dependencies]
+# Tests only. A server for the handshakes (`ring` signs), and certificates made at run time.
+rustls = { version = "=0.23.45", default-features = false, features = ["std", "ring"] }
+rcgen = "0.14"
+
+[lints.rust]
+missing_docs = "warn"
+unsafe_code = "forbid"
+unreachable_pub = "warn"
