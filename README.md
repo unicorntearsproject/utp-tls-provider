@@ -6,7 +6,8 @@ straight on the [RustCrypto](https://github.com/RustCrypto) crates, is `no_std` 
 small enough to read in an afternoon (about a thousand lines of library code, plus tests).
 
 **Unaudited.** Nobody independent has reviewed this code. It is tested hard (below), but "tested" is
-not "audited". It is a project of the Unicorn Tears Project, written for Rusty Bucket's TLS client; it
+not "audited". It is a project of the [Unicorn Tears Project (UTP)](https://github.com/unicorntearsproject), created for
+[**Rusty Bucket AI OS**](https://rustybucket.ai)'s TLS client; it
 is **not** affiliated with, endorsed by, or part of rustls or RustCrypto, and its name does not claim
 otherwise.
 
